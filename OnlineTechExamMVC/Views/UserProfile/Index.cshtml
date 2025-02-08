@@ -1,0 +1,33 @@
+﻿@model IEnumerable<OnlineTechExamMVC.Models.UserProfile>
+
+<h2>User Profiles</h2>
+<a asp-action="Create" class="btn btn-primary">Create New</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Birthday</th>
+            <th>Age</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.EmailAddress</td>
+                <td>@user.Gender</td>
+                <td>@user.Birthday.ToShortDateString()</td>
+                <td>@user.Age</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@user.UserID" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@user.UserID" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

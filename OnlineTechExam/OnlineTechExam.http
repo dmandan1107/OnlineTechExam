@@ -1,0 +1,6 @@
+@OnlineTechExam_HostAddress = http://localhost:5109
+
+GET {{OnlineTechExam_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
