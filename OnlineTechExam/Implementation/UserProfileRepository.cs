@@ -30,11 +30,9 @@ public class UserProfileRepository : IUserProfileRepository
     public async Task<UserProfile> GetByIdAsync(int id)
     {
         using var db = GetDbConnection();
-        return await db.QueryFirstOrDefaultAsync<UserProfile>(
-            "GetUserProfileById",
-            new { UserID = id },
-            commandType: CommandType.StoredProcedure
-        );
+        var parameters = new DynamicParameters();
+        parameters.Add("@UserID", id);
+        return await db.QueryFirstOrDefaultAsync<UserProfile>("GetUserProfileById", parameters, commandType: CommandType.StoredProcedure);
     }
 
     public async Task<UserProfile> CreateAsync(UserProfile user)
@@ -68,18 +66,15 @@ public class UserProfileRepository : IUserProfileRepository
         try
         {
             using var db = GetDbConnection();
-            var rowsAffected = await db.ExecuteAsync(
-                "UpdateUserProfile",
-                new
-                {
-                    user.UserID,
-                    user.Name,
-                    user.EmailAddress,
-                    user.Gender,
-                    user.Birthday
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            var parameters = new DynamicParameters();
+            parameters.Add("@UserID", user.UserID);
+            parameters.Add("@Name", user.Name);
+            parameters.Add("@EmailAddress", user.EmailAddress);
+            parameters.Add("@Gender", user.Gender);
+            parameters.Add("@Birthday", user.Birthday);
+
+
+            var rowsAffected = await db.ExecuteAsync("UpdateUserProfile",parameters,commandType: CommandType.StoredProcedure);
 
             if (rowsAffected > 0)
             {
@@ -103,11 +98,9 @@ public class UserProfileRepository : IUserProfileRepository
         try
         {
             using var db = GetDbConnection();
-            var rowsAffected = await db.ExecuteAsync(
-                "DeleteUserProfile",
-                new { UserID = id },
-                commandType: CommandType.StoredProcedure
-            );
+            var parameters = new DynamicParameters();
+            parameters.Add("@UserID", id);
+            var rowsAffected = await db.ExecuteAsync("DeleteUserProfile", parameters, commandType: CommandType.StoredProcedure);
 
             return rowsAffected > 0;
         }
